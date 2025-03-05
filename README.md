@@ -1,6 +1,7 @@
 # DB5785 - PostgreSQL and Docker Workshop
 
 This workshop will guide you through setting up and managing a PostgreSQL database using Docker. You will also explore how to use pgAdmin to interact with the database and perform various tasks.
+You will use 'pgadmin' to access through it's GUI to the database
 
 Yo will have to modify the **Workshop Summary** below according to your own implementation
 
@@ -57,7 +58,14 @@ Before you begin, ensure you have the following installed on your system:
 
 ## Setting Up pgAdmin with Docker
 
-### 1. **Run the pgAdmin Container**
+### 1. **Pull the pgAdmin Docker Image**
+   Download the official PostgreSQL Docker image with the following command:
+
+   ```bash
+   docker pull postgres:latest
+   ```
+
+### 2. **Run the pgAdmin Container**
    Start the pgAdmin container using the following command:
 
    ```bash
@@ -68,7 +76,7 @@ Before you begin, ensure you have the following installed on your system:
 
    - The `-p 5050:80` flag maps port `5050` on your host machine to port `80` inside the container (where pgAdmin runs).
 
-### 2. **Access pgAdmin**
+### 3. **Access pgAdmin**
    Open your browser and go to:
 
    ```
