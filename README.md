@@ -1,6 +1,6 @@
 # 🧑‍💻 DB5785 - PostgreSQL and Docker Workshop 🗄️🐋
 
-This workshop will guide you through setting up and managing a PostgreSQL database using Docker. 
+This workshop will guide you through setting up and managing a PostgreSQL database using Docker.  
 You will also explore how to use _pgAdmin_ GUI to interact with the database and perform various tasks.
 
 Yo will have to modify the **Workshop Summary** below according to your own implementation
