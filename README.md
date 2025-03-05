@@ -4,7 +4,7 @@ This workshop will guide you through setting up and managing a _PostgreSQL datab
 You will also explore how to use _pgAdmin_ GUI to interact with the database and perform various tasks.  
 
 You will have to modify the [Workshop Summary](#workshop-id) below according to your own implementation  
-- see: *[Markdown Guide](https://www.markdownguide.org)* for modifying this Readme.md file. 
+- see: *[Markdown Guide](https://www.markdownguide.org)* and *[Wrinting anf Formatting in Github](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github)* for modifying this Readme.md file. 
 
 ---
 
@@ -119,8 +119,8 @@ By the end of this workshop, you will:
 - Gain hands-on experience with basic and advanced database operations.
 
 ----
-
-## 🧑‍🏫 Workshop Summary (to be modified by the students) 🧑‍🎓 {workshop-id}
+<a name="workshop-id"></a>
+## 🧑‍🏫 Workshop Summary (to be modified by the students) 🧑‍🎓 
 
 This workshop introduces key database concepts and provides hands-on practice in a controlled, containerized environment using PostgreSQL within Docker.
 
