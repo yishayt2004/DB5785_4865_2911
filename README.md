@@ -177,6 +177,18 @@ This workshop introduces key database concepts and provides hands-on practice in
 
 ---
 
+## 💡 Workshop Outcomes
+
+By the end of this workshop, you should be able to:
+
+- Design and create a database schema based on an ERD.
+- Perform CRUD (Create, Read, Update, Delete) operations with SQL.
+- Write complex queries using joins, aggregations, and subqueries.
+- Create and use stored functions and procedures for automation and performance.
+- Work effectively with PostgreSQL inside a Docker container for development and testing.
+
+---
+
 ## Additional Tasks for Students
 
 ### 1. **Database Backup and Restore**
