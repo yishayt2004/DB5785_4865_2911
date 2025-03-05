@@ -4,7 +4,7 @@ This workshop will guide you through setting up and managing a _PostgreSQL datab
 You will also explore how to use _pgAdmin_ GUI to interact with the database and perform various tasks.  
 
 You will have to modify the [Workshop Summary](#workshop-id) below according to your own implementation  
-- see: *[Markdown Guide](https://www.markdownguide.org)* and *[Writing and Formatting in Github](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github)* for modifying this Readme.md file. 
+- see: *[Markdown Guide](https://www.markdownguide.org)* and *[Writing and Formatting in Github](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github)* for modifying this Readme.md file accordingly. 
 
 ---
 
