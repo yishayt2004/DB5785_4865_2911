@@ -211,10 +211,7 @@ This workshop introduces key database concepts and provides hands-on practice in
    GRANT SELECT ON your_table TO read_only;
    ```
 
-### 4. **Database Migration**
-   - Migrate data from another database (e.g., SQLite or MySQL) to PostgreSQL.
-
-### 5. **Advanced SQL Queries**
+### 4. **Advanced SQL Queries**
    - Write advanced SQL queries using window functions, recursive queries, and CTEs.
 
    ```sql
@@ -234,15 +231,7 @@ This workshop introduces key database concepts and provides hands-on practice in
    SELECT * FROM pg_stat_user_tables;
    ```
 
-### 7. **Automating Tasks with Cron Jobs**
-   - Automate database maintenance tasks (e.g., backups) using cron jobs.
-
-   ```bash
-   # Example: Schedule a daily backup at 2 AM
-   0 2 * * * pg_dump -U postgres -d your_database_name -f /backups/backup_$(date +\%F).sql
-   ```
-
-### 8. **Using Extensions**
+### 7. **Using Extensions**
    - Install and use PostgreSQL extensions like `pgcrypto` or `postgis`.
 
    ```sql
@@ -251,6 +240,14 @@ This workshop introduces key database concepts and provides hands-on practice in
 
    -- Example: Encrypt data
    INSERT INTO users (username, password) VALUES ('alice', crypt('password', gen_salt('bf')));
+   ```
+
+### 8. **Automating Tasks with Cron Jobs**
+   - Automate database maintenance tasks (e.g., backups) using cron jobs.
+
+   ```bash
+   # Example: Schedule a daily backup at 2 AM
+   0 2 * * * pg_dump -U postgres -d your_database_name -f /backups/backup_$(date +\%F).sql
    ```
 
 ### 9. **Database Testing**
