@@ -1,7 +1,3 @@
-User is conducting a workshop where students need to modify different sections of the workshop summary by adding snapshots and code to the respective parts. The students should upload or link relevant images or files.Got it! Here's the updated `README.md` with sections where students can upload or link to images and files, marked for clarity:
-
----
-
 # DB5785 - PostgreSQL and Docker Workshop
 
 This workshop will guide you through setting up and managing a PostgreSQL database using Docker. You will also explore how to use pgAdmin to interact with the database and perform various tasks.
