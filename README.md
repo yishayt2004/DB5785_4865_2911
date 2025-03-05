@@ -84,7 +84,79 @@ To run PostgreSQL in a Docker container, follow these steps:
     - You can now connect to the PostgreSQL database inside the container using `psql` or a database client of your choice.
 
 ---
+Ah, I see! You haven't included instructions on how to run and access the PostgreSQL database through **pgAdmin**, which is a crucial part of the workshop. Let me help you add that section to your README. Here's how you can explain it clearly:
 
+---
+
+## Accessing PostgreSQL via pgAdmin
+
+Once you have set up the PostgreSQL and pgAdmin containers, you can use **pgAdmin** to manage and interact with your database. Below are the steps to access the database through pgAdmin.
+
+### 1. **Run the pgAdmin Container**
+   - Start the pgAdmin container alongside your PostgreSQL container.
+   - Use the following command to run pgAdmin:
+
+     ```bash
+     docker run --name pgadmin -d -p 8080:80 -e PGADMIN_DEFAULT_EMAIL=admin@example.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:latest
+     ```
+
+   - Replace `admin@example.com` and `admin` with your preferred email and password for pgAdmin.
+
+### 2. **Access pgAdmin in Your Browser**
+   - Open your web browser and navigate to:
+     ```
+     http://localhost:8080
+     ```
+   - Log in using the email and password you set in the previous step.
+
+### 3. **Connect to the PostgreSQL Database**
+   - After logging in, follow these steps to connect to your PostgreSQL database:
+     1. Click on **Add New Server**.
+     2. In the **General** tab, provide a name for your server (e.g., `PostgreSQL Docker`).
+     3. In the **Connection** tab, enter the following details:
+        - **Host name/address**: `postgres` (or the name of your PostgreSQL container).
+        - **Port**: `5432` (default PostgreSQL port).
+        - **Maintenance database**: `postgres` (default database).
+        - **Username**: `postgres` (default superuser).
+        - **Password**: The password you set for the PostgreSQL container (e.g., `your_password`).
+     4. Click **Save** to connect.
+
+### 4. **Explore and Manage the Database**
+   - Once connected, you can:
+     - Create and manage databases.
+     - Run SQL queries using the **Query Tool**.
+     - View and edit tables, views, and stored procedures.
+     - Monitor database activity and performance.
+
+---
+
+### Example: Running a Query in pgAdmin
+1. Expand the server you just added.
+2. Right-click on a database (e.g., `postgres`) and select **Query Tool**.
+3. Write and execute SQL queries. For example:
+
+   ```sql
+   SELECT * FROM your_table;
+   ```
+
+4. View the results in the **Data Output** tab.
+
+---
+
+### Troubleshooting
+- **Connection Issues**:
+  - Ensure both the PostgreSQL and pgAdmin containers are running.
+  - Verify the container names and network settings (e.g., use `docker network` if containers are on different networks).
+  - Check the logs for errors:
+    ```bash
+    docker logs postgres
+    docker logs pgadmin
+    ```
+
+- **Forgot Password**:
+  - If you forget the pgAdmin password, you can reset it by restarting the container with a new `PGADMIN_DEFAULT_PASSWORD`.
+
+---
 ## 📝 Workshop Files & Scripts
 
 ### ERD Design
