@@ -97,7 +97,7 @@ Once you have set up the PostgreSQL and pgAdmin containers, you can use **pgAdmi
    - Use the following command to run pgAdmin:
 
      ```bash
-     docker run --name pgadmin -d -p 8080:80 -e PGADMIN_DEFAULT_EMAIL=admin@example.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:latest
+     docker run --name pgadmin -d -p 5000:80 -e PGADMIN_DEFAULT_EMAIL=admin@example.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:latest
      ```
 
    - Replace `admin@example.com` and `admin` with your preferred email and password for pgAdmin.
@@ -105,7 +105,7 @@ Once you have set up the PostgreSQL and pgAdmin containers, you can use **pgAdmi
 ### 2. **Access pgAdmin in Your Browser**
    - Open your web browser and navigate to:
      ```
-     http://localhost:8080
+     http://localhost:5000
      ```
    - Log in using the email and password you set in the previous step.
 
