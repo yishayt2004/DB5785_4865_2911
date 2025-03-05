@@ -117,8 +117,7 @@ By the end of this workshop, you will:
 - Learn how to use Docker volumes to persist database data.
 - Gain hands-on experience with basic and advanced database operations.
 
----
-------
+----
 
 ## 🧑‍🏫 Workshop Summary (to be modified by the students)
 
