@@ -371,3 +371,11 @@ By the end of this workshop, you should be able to:
      - This ensures that both containers can communicate over the internal network created by Docker.
 
 ---
+
+
+## 👇 Resources
+
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [pgAdmin Documentation](https://www.pgadmin.org/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+
