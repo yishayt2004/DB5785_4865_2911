@@ -3,9 +3,8 @@
 This workshop will guide you through setting up and managing a _PostgreSQL database_ using Docker.  
 You will also explore how to use _pgAdmin_ GUI to interact with the database and perform various tasks.  
 
-You will have to modify the **Workshop Summary** below  
-according to your own implementation  
-       see: *[Markdown Guide](https://www.markdownguide.org)* for modifying this Readme.md file. 
+You will have to modify the **Workshop Summary** below according to your own implementation  
+- see: *[Markdown Guide](https://www.markdownguide.org)* for modifying this Readme.md file. 
 
 ---
 
