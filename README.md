@@ -119,7 +119,7 @@ By the end of this workshop, you will:
 
 ----
 
-## 🧑‍🏫 Workshop Summary (to be modified by the students)
+## 🧑‍🏫 Workshop Summary (to be modified by the students) 🧑‍🎓
 
 This workshop introduces key database concepts and provides hands-on practice in a controlled, containerized environment using PostgreSQL within Docker.
 
