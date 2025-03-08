@@ -94,7 +94,7 @@ Before you begin, ensure you have the following installed on your system:
    - After logging into pgAdmin, click on **Add New Server**.
    - In the **General** tab, provide a name for your server (e.g., `PostgreSQL Docker`).
    - In the **Connection** tab, enter the following details:
-     - **Host name/address**: `postgres` (or the name of your PostgreSQL container).
+     - **Host name/address**: `postgres` (or the name of your PostgreSQL container). [by default should be  172.17.0.2 on windows]
      - **Port**: `5432` (default PostgreSQL port).
      - **Maintenance database**: `postgres` (default database).
      - **Username**: `postgres` (default superuser).
