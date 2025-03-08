@@ -70,7 +70,7 @@ Before you begin, ensure you have the following installed on your system:
    Start the pgAdmin container using the following command:
 
    ```bash
-   docker run --name pgadmin -d -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=yourname@g.jct.ac.il -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:latest
+   docker run --name pgadmin -d -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=admin@example.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:latest
    ```
 
    Replace `5050` with your desired port, and `admin@example.com` and `admin` with your preferred email and password for pgAdmin.
