@@ -21,7 +21,7 @@ https://neon.tech/postgresql/postgresql-views
 https://neon.tech/postgresql/postgresql-views/postgresql-materialized-views
 
 https://www.sqlshack.com/postgresql-tutorial-for-beginners/
-
+https://www.rebasedata.com/convert-csv-to-postgresql-online
 
 
 
