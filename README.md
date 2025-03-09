@@ -132,7 +132,7 @@ This workshop introduces key database concepts and provides hands-on practice in
 
    **[Add ERD Snapshot Here]**
 
-![add_image_to readme_with_relative_path](https://github.com/user-attachments/assets/db524926-9dbd-4836-8093-9eeacc0133fe)
+![add_image_to readme_with_relative_path](images/erd/one.jpg)
 
   
    *(Upload or link to the ERD image or file)*
