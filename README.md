@@ -132,7 +132,7 @@ This workshop introduces key database concepts and provides hands-on practice in
 
    **[Add ERD Snapshot Here]**
 
-   ![adding related images](https://github.com/eliezergensburger/DB5785/tree/5e0a98d6f041b61a70151ecd18f031690163c5f3/images)
+   ![adding related images](https://github.com/eliezergensburger/DB5785/tree/5e0a98d6f041b61a70151ecd18f031690163c5f3/images/add_image_to readme_with_relative_path - Copy.PNG)
 
   
    *(Upload or link to the ERD image or file)*
