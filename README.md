@@ -131,8 +131,10 @@ This workshop introduces key database concepts and provides hands-on practice in
    - Focused on normalizing the database and ensuring scalability.
 
    **[Add ERD Snapshot Here]**
+   
+![add_image_to readme_with_relative_path](images/erd/addimageto readmewith_elativepath.PNG)
 
-![add_image_to readme_with_relative_path](images/erd/one.jpg)
+![add_image_one.png](images/erd/one.jpg)
 
   
    *(Upload or link to the ERD image or file)*
