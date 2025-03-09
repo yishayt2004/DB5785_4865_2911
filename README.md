@@ -131,44 +131,45 @@ This workshop introduces key database concepts and provides hands-on practice in
    - Focused on normalizing the database and ensuring scalability.
 
    **[Add ERD Snapshot Here]**
+   ![adding related images](images/erd/add image to readme.PNG)
    *(Upload or link to the ERD image or file)*
 
-2. **Creating Tables**:
+3. **Creating Tables**:
    - Translated the ERD into actual tables, defining columns, data types, primary keys, and foreign keys.
    - Utilized SQL commands for table creation.
 
    **[Add Table Creation Code Here]**
    *(Provide or link to the SQL code used to create the tables)*
 
-3. **Generating Sample Data**:
+4. **Generating Sample Data**:
    - Generated sample data to simulate real-world scenarios using **SQL Insert Statements**.
    - Used scripts to automate bulk data insertion for large datasets.
 
    **[Add Sample Data Insert Script Here]**
    *(Upload or link to the sample data insert scripts)*
 
-4. **Writing SQL Queries**:
+5. **Writing SQL Queries**:
    - Practiced writing **SELECT**, **JOIN**, **GROUP BY**, and **ORDER BY** queries.
    - Learned best practices for querying data efficiently, including indexing and optimization techniques.
 
    **[Add Example SQL Query Here]**
    *(Provide or link to example SQL queries)*
 
-5. **Stored Procedures and Functions**:
+6. **Stored Procedures and Functions**:
    - Created reusable **stored procedures** and **functions** to handle common database tasks.
    - Used SQL to manage repetitive operations and improve performance.
 
    **[Add Stored Procedures/Function Code Here]**
    *(Upload or link to SQL code for stored procedures and functions)*
 
-6. **Views**:
+7. **Views**:
    - Created **views** to simplify complex queries and provide data abstraction.
    - Focused on security by limiting user access to certain columns or rows.
 
    **[Add View Code Here]**
    *(Provide or link to the SQL code for views)*
 
-7. **PostgreSQL with Docker**:
+8. **PostgreSQL with Docker**:
    - Set up a Docker container to run **PostgreSQL**.
    - Configured database connections and managed data persistence within the containerized environment.
 
