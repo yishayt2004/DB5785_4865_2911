@@ -90,11 +90,16 @@ Before you begin, ensure you have the following installed on your system:
 
 ## Accessing PostgreSQL via pgAdmin
 
+finding Host address: 
+  ```bash
+  docker inspect --format='{{.NetworkSettings.IPAddress}}' postgres
+  ```
+
 ### 1. **Connect to the PostgreSQL Database**
    - After logging into pgAdmin, click on **Add New Server**.
    - In the **General** tab, provide a name for your server (e.g., `PostgreSQL Docker`).
    - In the **Connection** tab, enter the following details:
-     - **Host name/address**: `postgres` (or the name of your PostgreSQL container). [by default should be  172.17.0.2 on windows]
+     - **Host name/address**: `postgres` (or the name of your PostgreSQL container). [usually  172.17.0.2 on windows]
      - **Port**: `5432` (default PostgreSQL port).
      - **Maintenance database**: `postgres` (default database).
      - **Username**: `postgres` (default superuser).
