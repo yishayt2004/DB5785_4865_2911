@@ -16,7 +16,7 @@ FROM EmployeeEvaluation ev
 JOIN Employee e ON ev.EmployeeID = e.EmployeeID
 WHERE ev.Score < 60 AND EXTRACT(YEAR FROM ev.EvaluationDate) = EXTRACT(YEAR FROM CURRENT_DATE);
 
--- 3. Trainings from current year
+-- 3. Trainings from current 10 years
 SELECT e.FirstName, e.LastName, t.TrainingName, t.TrainingDate
 FROM EmployeeTraining t
 JOIN Employee e ON t.EmployeeID = e.EmployeeID
@@ -28,6 +28,7 @@ FROM EmployeeTraining t
 JOIN Employee e ON t.EmployeeID = e.EmployeeID
 JOIN Department d ON e.DepartmentID = d.DepartmentID
 GROUP BY d.DepartmentName;
+
 
 -- 5. Employees with over 60 days since first payment
 SELECT DISTINCT e.EmployeeID, e.FirstName, e.LastName, MIN(p.PaymentDate) AS FirstPayment
@@ -46,7 +47,7 @@ WHERE NOT EXISTS (
 -- 7. Daily shift hours
 SELECT s.ShiftID, e.FirstName, e.LastName,
        s.ShiftDate, s.StartTime, s.EndTime,
-       EXTRACT(HOUR FROM (s.EndTime::timestamp - s.StartTime::timestamp)) AS ShiftHours
+       EXTRACT(EPOCH FROM (s.EndTime - s.StartTime)) / 3600 AS ShiftHours
 FROM ShiftSchedule s
 JOIN Employee e ON s.EmployeeID = e.EmployeeID;
 
