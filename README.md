@@ -26,9 +26,9 @@ $$ LANGUAGE plpgsql;
 ```
 
 **הוכחת הפעלה:**  
-📸 *צילום מסך של SELECT * FROM GetUntrainedEmployees();*  
+![📸 *צילום מסך של SELECT * FROM GetUntrainedEmployees();*  
 הוצגו לפחות 10 תוצאות.
-
+](screenshots/GetUntrainedEmployees.png)
 ---
 
 ## ✅ פונקציה 2: GetEmployeeAvgScore
@@ -54,8 +54,8 @@ $$ LANGUAGE plpgsql;
 ```
 
 **הוכחת הפעלה:**  
-📸 *צילום מסך של SELECT GetEmployeeAvgScore(201);*  
-הפונקציה החזירה את ממוצע הציונים בהצלחה.
+![📸 *צילום מסך של SELECT GetEmployeeAvgScore(201);*  
+הפונקציה החזירה את ממוצע הציונים בהצלחה.](screenshots/GetEmployeeAvgScore(201).png)
 
 ---
 
@@ -80,10 +80,9 @@ BEGIN
 END;
 $$;
 ```
-
-**הוכחת הפעלה:**  
-📸 *צילום לפני ואחרי השכר של עובדים עם ציונים גבוהים.*
-
+**Proof of Execution:**  
+![Before salary increase](screenshots/p1_before.png)
+![After salary increase](screenshots/p1_after.png)
 ---
 
 ## ✅ פרוצדורה 2: ReduceSalaryForLowScores
@@ -113,33 +112,34 @@ $$;
 ```
 
 **הוכחת הפעלה:**  
-📸 *צילום מסך שמראה ירידה בשכר עבור עובדים רלוונטיים.*
+before: screenshots/p2_before.png
+after: screenshots/p2_after.png
 
 ---
 
-## ✅ טריגר 1: הודעה בעת הכנסה לטבלת Event
+## טריגר 1: עדכון תאריך השתלמות אחרון
 
 **תיאור:**  
 טריגר המדפיס הודעה לקונסול בעת הוספת אירוע חדש.
 
 **קוד:**
 ```sql
-CREATE OR REPLACE FUNCTION NotifyNewEvent()
+CREATE OR REPLACE FUNCTION UpdateLastTrainingDate()
 RETURNS TRIGGER AS $$
 BEGIN
-    RAISE NOTICE 'New event "%", organized by Employee ID: %', NEW.EventType, NEW.OrganizerEmployeeID;
+    UPDATE Employee
+    SET LastTrainingDate = NEW.TrainingDate
+    WHERE EmployeeID = NEW.EmployeeID;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER Trigger_NotifyNewEvent
-AFTER INSERT ON Event
+CREATE TRIGGER trg_UpdateLastTrainingDate
+AFTER INSERT ON EmployeeTraining
 FOR EACH ROW
-EXECUTE FUNCTION NotifyNewEvent();
-```
+EXECUTE FUNCTION UpdateLastTrainingDate();
 
-**הוכחת הפעלה:**  
-📸 *צילום מסך של הודעת ה־RAISE NOTICE בהוספת אירוע חדש.*
+```
 
 ---
 
@@ -174,28 +174,20 @@ EXECUTE FUNCTION WarnBeforeDeletingTopEmployee();
 ```
 
 **הוכחת הפעלה:**  
-📸 *צילום מסך של ניסיון למחוק עובד עם ציון גבוה והודעת RAISE NOTICE.*
+![הודעת אזהרה בעת מחיקת עובד מצטיין](screenshots/trig_modify.png)
 
 ---
 
-## ✅ תוכנית ראשית 1
+## `main_program_1.sql`
 
 **תיאור:**  
 מריצה את הפונקציה `GetUntrainedEmployees` ומבצעת העלאת שכר למצטיינים.
 
-**קוד:**  
-`main_program_1.sql`
-
-📸 *צילום מסך של ההדפסות ושל השינוי במשכורות.*
-
 ---
 
-## ✅ תוכנית ראשית 2
+## main_program_2.sql
 
 **תיאור:**  
 מריצה את `GetEmployeeAvgScore` לעובד אחד, ומבצעת הפחתת שכר לעובדים בעלי ציונים נמוכים.
 
-**קוד:**  
-`main_program_2.sql`
 
-📸 *צילום מסך של הדפסה וירידת שכר.*

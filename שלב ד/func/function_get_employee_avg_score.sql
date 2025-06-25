@@ -1,5 +1,3 @@
--- פונקציה שמחזירה את ממוצע ציוני ההערכה של עובד לפי מזהה
-
 DROP FUNCTION IF EXISTS GetEmployeeAvgScore(INT);
 
 CREATE OR REPLACE FUNCTION GetEmployeeAvgScore(emp_id INT)
@@ -16,4 +14,5 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- test the function
 SELECT GetEmployeeAvgScore(201);
