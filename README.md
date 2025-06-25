@@ -1,148 +1,201 @@
 
-# דוח פרויקט – שלב ג – אינטגרציה ומבטים
+# דוח פרויקט – שלב ד: תכנות (PL/pgSQL)
 
-## 🧑‍🤝‍🧑 שמות חברי הצוות:
-- איתן לטס  
-- ישי תירם  
-
-## 🗂️ המערכת: ניהול מלון – אינטגרציה עם מערכת אירועים
+בשלב זה נכתבו מספר תוכניות על בסיס הנתונים לאחר האינטגרציה. כל תוכנית כוללת תיאור, קוד, ותיעוד הפעלה מוצלח באמצעות צילום מסך או תוצאה מהדאטהבייס.
 
 ---
 
-## תוכן עניינים
+## ✅ פונקציה 1: GetUntrainedEmployees
 
-1. [ERD + DSD – של הטבלה החדשה](#erd--dsd--של-הטבלה-החדשה)
-2. [ERD משולב](#erd-משולב)
-3. [החלטות אינטגרציה](#החלטות-אינטגרציה)
-4. [הסבר על השינויים שנעשו בטבלאות](#הסבר-על-השינויים-שנעשו-בטבלאות)
-5. [המבטים שנוצרו](#המבטים-שנוצרו)
-6. [שאילתות על מבטים](#שאילתות-על-מבטים)
+**תיאור:**  
+הפונקציה מחזירה את רשימת כל העובדים שמעולם לא עברו הכשרה. הפלט הוא טבלת תוצאות עם מזהה, שם פרטי ושם משפחה.
 
----
-
-## ERD + DSD – של הטבלה החדשה
-
-הוספנו טבלה חדשה בשם `Event`, המתארת אירועים המנוהלים ע"י עובדי המלון.
-
-📷 צילום מסך של ERD הטבלה החדשה:
-![ERD Event](screenshots/erd_event.png)
-
-📷 צילום מסך של DSD הטבלה החדשה:
-![DSD Event](screenshots/dsd_event.png)
-
----
-
-## ERD משולב
-
-📷 צילום מסך של ERD הכולל את מערכת העובדים ואת טבלת האירועים:
-![ERD משולב](screenshots/erd_merged.png)
-
-📷 צילום מסך של DSD לאחר האינטגרציה:
-![DSD משולב](screenshots/dsd_merged.png)
-
----
-
-## החלטות אינטגרציה
-
-1. לא שינינו את הטבלאות הקיימות אלא הוספנו את טבלת `Event` עם קשר ל-`Employee` דרך השדה `OrganizerEmployeeID`.
-2. יצרנו קשר זר (Foreign Key) מטבלת `Event` ל-`Employee`.
-3. ביצענו התאמת נתונים כך שלכל מזהה עובד ב-`Event` קיים עובד אמיתי ב-`Employee`.
-
----
-
-## הסבר על השינויים שנעשו בטבלאות
-
-השינוי היחיד שנעשה היה:
+**קוד:**
 ```sql
-ALTER TABLE Event
-ADD CONSTRAINT fk_event_organizer
-FOREIGN KEY (OrganizerEmployeeID) REFERENCES Employee(EmployeeID);
+CREATE OR REPLACE FUNCTION GetUntrainedEmployees()
+RETURNS TABLE(EmployeeID INT, FirstName TEXT, LastName TEXT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT e.EmployeeID, e.FirstName, e.LastName
+    FROM Employee e
+    WHERE NOT EXISTS (
+        SELECT 1 FROM EmployeeTraining t WHERE t.EmployeeID = e.EmployeeID
+    );
+END;
+$$ LANGUAGE plpgsql;
 ```
 
----
-
-## המבטים שנוצרו
-
-### 🔍 View 1 – EmployeeEventsView
-
-מבט המציג מידע על אירועים והעובדים שארגנו אותם.
-
-```sql
-CREATE VIEW EmployeeEventsView AS
-SELECT 
-    e.EmployeeID,
-    e.FirstName,
-    e.LastName,
-    ev.EventID,
-    ev.EventTitle,
-    ev.EventDate,
-    ev.Location
-FROM Event ev
-JOIN Employee e ON ev.OrganizerEmployeeID = e.EmployeeID;
-```
+**הוכחת הפעלה:**  
+📸 *צילום מסך של SELECT * FROM GetUntrainedEmployees();*  
+הוצגו לפחות 10 תוצאות.
 
 ---
 
-### 🔍 View 2 – EmployeeWithDepartmentView
+## ✅ פונקציה 2: GetEmployeeAvgScore
 
-מבט המציג עובדים יחד עם שם המחלקה שלהם.
+**תיאור:**  
+מקבלת מזהה עובד ומחזירה את ממוצע הציונים שלו מכל ההערכות שקיבל.
 
+**קוד:**
 ```sql
-CREATE VIEW EmployeeWithDepartmentView AS
-SELECT 
-    e.EmployeeID,
-    e.FirstName,
-    e.LastName,
-    e.Position,
-    d.DepartmentName
-FROM Employee e
-JOIN Department d ON e.DepartmentID = d.DepartmentID;
+CREATE OR REPLACE FUNCTION GetEmployeeAvgScore(emp_id INT)
+RETURNS NUMERIC AS $$
+DECLARE
+    avg_score NUMERIC;
+BEGIN
+    SELECT AVG(Score)
+    INTO avg_score
+    FROM EmployeeEvaluation
+    WHERE EmployeeID = emp_id;
 
+    RETURN avg_score;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+**הוכחת הפעלה:**  
+📸 *צילום מסך של SELECT GetEmployeeAvgScore(201);*  
+הפונקציה החזירה את ממוצע הציונים בהצלחה.
 
 ---
 
-## שאילתות על מבטים
+## ✅ פרוצדורה 1: RaiseHighPerformerSalaries
 
-### 🟢 שאילתות על EmployeeEventsView
+**תיאור:**  
+הפרוצדורה מעלה את השכר ב־10% לעובדים שקיבלו לפחות ציון 90 באחת ההערכות.
 
-#### 1. כל האירועים שמאורגנים באוגוסט
+**קוד:**
 ```sql
-SELECT * FROM EmployeeEventsView
-WHERE EXTRACT(MONTH FROM EventDate) = 8;
-```
-שלב ג/view1.csv
-
-
-#### 2. מספר אירועים לכל עובד
-```sql
-SELECT EmployeeID, FirstName, LastName, COUNT(*) AS EventCount
-FROM EmployeeEventsView
-GROUP BY EmployeeID, FirstName, LastName;
-```
-שלב ג/view1.csv
----
-
-### 🟢 שאילתות על EmployeeWithDepartmentView
-
-#### 1. עובדים ששייכים למחלקת HR
-```sql
-SELECT * FROM EmployeeWithDepartmentView
-WHERE DepartmentName = 'HR';
+CREATE OR REPLACE PROCEDURE RaiseHighPerformerSalaries()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Employee
+    SET Salary = Salary * 1.10
+    WHERE EmployeeID IN (
+        SELECT DISTINCT EmployeeID
+        FROM EmployeeEvaluation
+        WHERE Score >= 90
+    );
+END;
+$$;
 ```
 
-שלב ג/view2.csv
-
-#### 2. כמות עובדים בכל מחלקה
-```sql
-SELECT DepartmentName, COUNT(*) AS EmployeeCount
-FROM EmployeeWithDepartmentView
-GROUP BY DepartmentName;
-```
-
-שלב ג/view2.csv
+**הוכחת הפעלה:**  
+📸 *צילום לפני ואחרי השכר של עובדים עם ציונים גבוהים.*
 
 ---
 
-## ✔️ סיכום
+## ✅ פרוצדורה 2: ReduceSalaryForLowScores
 
-בשלב זה ביצענו אינטגרציה עם מערכת חיצונית תוך שמירה על מבנה הטבלאות הקיים. הוספנו טבלה חדשה, יצרנו קשרים מתאימים, ובנינו מבטים משמעותיים עם שאילתות תואמות. כל התהליך מגובה בצילומי מסך, פקודות SQL, וקובצי גיבוי.
+**תיאור:**  
+פרוצדורה שמפחיתה את השכר ב־15% לעובדים שממוצע ההערכות שלהם נמוך מ־60.
+
+**קוד:**
+```sql
+CREATE OR REPLACE PROCEDURE ReduceSalaryForLowScores()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Employee
+    SET Salary = Salary * 0.85
+    WHERE EmployeeID IN (
+        SELECT EmployeeID
+        FROM (
+            SELECT EmployeeID, AVG(Score) AS avg_score
+            FROM EmployeeEvaluation
+            GROUP BY EmployeeID
+        ) sub
+        WHERE avg_score < 60
+    );
+END;
+$$;
+```
+
+**הוכחת הפעלה:**  
+📸 *צילום מסך שמראה ירידה בשכר עבור עובדים רלוונטיים.*
+
+---
+
+## ✅ טריגר 1: הודעה בעת הכנסה לטבלת Event
+
+**תיאור:**  
+טריגר המדפיס הודעה לקונסול בעת הוספת אירוע חדש.
+
+**קוד:**
+```sql
+CREATE OR REPLACE FUNCTION NotifyNewEvent()
+RETURNS TRIGGER AS $$
+BEGIN
+    RAISE NOTICE 'New event "%", organized by Employee ID: %', NEW.EventType, NEW.OrganizerEmployeeID;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Trigger_NotifyNewEvent
+AFTER INSERT ON Event
+FOR EACH ROW
+EXECUTE FUNCTION NotifyNewEvent();
+```
+
+**הוכחת הפעלה:**  
+📸 *צילום מסך של הודעת ה־RAISE NOTICE בהוספת אירוע חדש.*
+
+---
+
+## ✅ טריגר 2: אזהרה על מחיקת עובד מצטיין
+
+**תיאור:**  
+טריגר שמציג הודעה לפני מחיקת עובד בעל ציון ממוצע מעל 85.
+
+**קוד:**
+```sql
+CREATE OR REPLACE FUNCTION WarnBeforeDeletingTopEmployee()
+RETURNS TRIGGER AS $$
+DECLARE
+    avg_score NUMERIC;
+BEGIN
+    SELECT AVG(Score)
+    INTO avg_score
+    FROM EmployeeEvaluation
+    WHERE EmployeeID = OLD.EmployeeID;
+
+    IF avg_score > 85 THEN
+        RAISE NOTICE 'Warning: You are deleting a high-performing employee (ID: %)', OLD.EmployeeID;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Trigger_WarnBeforeDelete
+BEFORE DELETE ON Employee
+FOR EACH ROW
+EXECUTE FUNCTION WarnBeforeDeletingTopEmployee();
+```
+
+**הוכחת הפעלה:**  
+📸 *צילום מסך של ניסיון למחוק עובד עם ציון גבוה והודעת RAISE NOTICE.*
+
+---
+
+## ✅ תוכנית ראשית 1
+
+**תיאור:**  
+מריצה את הפונקציה `GetUntrainedEmployees` ומבצעת העלאת שכר למצטיינים.
+
+**קוד:**  
+`main_program_1.sql`
+
+📸 *צילום מסך של ההדפסות ושל השינוי במשכורות.*
+
+---
+
+## ✅ תוכנית ראשית 2
+
+**תיאור:**  
+מריצה את `GetEmployeeAvgScore` לעובד אחד, ומבצעת הפחתת שכר לעובדים בעלי ציונים נמוכים.
+
+**קוד:**  
+`main_program_2.sql`
+
+📸 *צילום מסך של הדפסה וירידת שכר.*
