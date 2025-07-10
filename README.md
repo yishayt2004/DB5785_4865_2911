@@ -1,193 +1,159 @@
 
-# דוח פרויקט – שלב ד: תכנות (PL/pgSQL)
+# דוח פרויקט – שלב ה': אפליקציית ווב למערכת ניהול משאבי אנוש
 
-בשלב זה נכתבו מספר תוכניות על בסיס הנתונים לאחר האינטגרציה. כל תוכנית כוללת תיאור, קוד, ותיעוד הפעלה מוצלח באמצעות צילום מסך או תוצאה מהדאטהבייס.
+בשלב זה פותחה אפליקציית ווב מלאה למערכת ניהול משאבי אנוש עם frontend ו-backend המתחברים למסד הנתונים PostgreSQL.
 
----
+## 🚀 הוראות הפעלה של האפליקציה
 
-## ✅ פונקציה 1: GetUntrainedEmployees
+### דרישות מוקדמות
+- Node.js (גרסה 14 ומעלה)
+- npm או yarn
+- PostgreSQL מותקן ופועל
+- מסד הנתונים מהשלבים הקודמים
 
-**תיאור:**  
-הפונקציה מחזירה את רשימת כל העובדים שמעולם לא עברו הכשרה. הפלט הוא טבלת תוצאות עם מזהה, שם פרטי ושם משפחה.
+### הפעלת הסרבר (Backend)
 
-**קוד:**
-```sql
-CREATE OR REPLACE FUNCTION GetUntrainedEmployees()
-RETURNS TABLE(EmployeeID INT, FirstName TEXT, LastName TEXT) AS $$
-BEGIN
-    RETURN QUERY
-    SELECT e.EmployeeID, e.FirstName, e.LastName
-    FROM Employee e
-    WHERE NOT EXISTS (
-        SELECT 1 FROM EmployeeTraining t WHERE t.EmployeeID = e.EmployeeID
-    );
-END;
-$$ LANGUAGE plpgsql;
+1. נווט לתיקיית הסרבר:
+```bash
+cd "שלב ה/backend"
 ```
 
-**הוכחת הפעלה:**  
-![📸 *צילום מסך של SELECT * FROM GetUntrainedEmployees();*  
-הוצגו לפחות 10 תוצאות.
-](screenshots/GetUntrainedEmployees.png)
----
-
-## ✅ פונקציה 2: GetEmployeeAvgScore
-
-**תיאור:**  
-מקבלת מזהה עובד ומחזירה את ממוצע הציונים שלו מכל ההערכות שקיבל.
-
-**קוד:**
-```sql
-CREATE OR REPLACE FUNCTION GetEmployeeAvgScore(emp_id INT)
-RETURNS NUMERIC AS $$
-DECLARE
-    avg_score NUMERIC;
-BEGIN
-    SELECT AVG(Score)
-    INTO avg_score
-    FROM EmployeeEvaluation
-    WHERE EmployeeID = emp_id;
-
-    RETURN avg_score;
-END;
-$$ LANGUAGE plpgsql;
+2. התקן dependencies:
+```bash
+npm install
 ```
 
-**הוכחת הפעלה:**  
-![📸 *צילום מסך של SELECT GetEmployeeAvgScore(201);*  
-הפונקציה החזירה את ממוצע הציונים בהצלחה.](screenshots/GetEmployeeAvgScore(201).png)
-
----
-
-## ✅ פרוצדורה 1: RaiseHighPerformerSalaries
-
-**תיאור:**  
-הפרוצדורה מעלה את השכר ב־10% לעובדים שקיבלו לפחות ציון 90 באחת ההערכות.
-
-**קוד:**
-```sql
-CREATE OR REPLACE PROCEDURE RaiseHighPerformerSalaries()
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    UPDATE Employee
-    SET Salary = Salary * 1.10
-    WHERE EmployeeID IN (
-        SELECT DISTINCT EmployeeID
-        FROM EmployeeEvaluation
-        WHERE Score >= 90
-    );
-END;
-$$;
+3. צור קובץ `.env` עם פרטי החיבור למסד הנתונים:
 ```
-**Proof of Execution:**  
-![Before salary increase](screenshots/p1_before.png)
-![After salary increase](screenshots/p1_after.png)
----
-
-## ✅ פרוצדורה 2: ReduceSalaryForLowScores
-
-**תיאור:**  
-פרוצדורה שמפחיתה את השכר ב־15% לעובדים שממוצע ההערכות שלהם נמוך מ־60.
-
-**קוד:**
-```sql
-CREATE OR REPLACE PROCEDURE ReduceSalaryForLowScores()
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    UPDATE Employee
-    SET Salary = Salary * 0.85
-    WHERE EmployeeID IN (
-        SELECT EmployeeID
-        FROM (
-            SELECT EmployeeID, AVG(Score) AS avg_score
-            FROM EmployeeEvaluation
-            GROUP BY EmployeeID
-        ) sub
-        WHERE avg_score < 60
-    );
-END;
-$$;
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=your_database_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+PORT=3001
 ```
 
-**הוכחת הפעלה:**  
-before: screenshots/p2_before.png
-after: screenshots/p2_after.png
-
----
-
-## טריגר 1: עדכון תאריך השתלמות אחרון
-
-**תיאור:**  
-טריגר המדפיס הודעה לקונסול בעת הוספת אירוע חדש.
-
-**קוד:**
-```sql
-CREATE OR REPLACE FUNCTION UpdateLastTrainingDate()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE Employee
-    SET LastTrainingDate = NEW.TrainingDate
-    WHERE EmployeeID = NEW.EmployeeID;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_UpdateLastTrainingDate
-AFTER INSERT ON EmployeeTraining
-FOR EACH ROW
-EXECUTE FUNCTION UpdateLastTrainingDate();
-
+4. הפעל את הסרבר:
+```bash
+npm start
 ```
 
----
+הסרבר יעלה על http://localhost:3001
 
-## ✅ טריגר 2: אזהרה על מחיקת עובד מצטיין
+### הפעלת הממשק (Frontend)
 
-**תיאור:**  
-טריגר שמציג הודעה לפני מחיקת עובד בעל ציון ממוצע מעל 85.
-
-**קוד:**
-```sql
-CREATE OR REPLACE FUNCTION WarnBeforeDeletingTopEmployee()
-RETURNS TRIGGER AS $$
-DECLARE
-    avg_score NUMERIC;
-BEGIN
-    SELECT AVG(Score)
-    INTO avg_score
-    FROM EmployeeEvaluation
-    WHERE EmployeeID = OLD.EmployeeID;
-
-    IF avg_score > 85 THEN
-        RAISE NOTICE 'Warning: You are deleting a high-performing employee (ID: %)', OLD.EmployeeID;
-    END IF;
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER Trigger_WarnBeforeDelete
-BEFORE DELETE ON Employee
-FOR EACH ROW
-EXECUTE FUNCTION WarnBeforeDeletingTopEmployee();
+1. פתח terminal נוסף ונווט לתיקיית הממשק:
+```bash
+cd "שלב ה/frontend"
 ```
 
-**הוכחת הפעלה:**  
-![הודעת אזהרה בעת מחיקת עובד מצטיין](screenshots/trig_modify.png)
+2. התקן dependencies:
+```bash
+npm install
+```
+
+3. הפעל את האפליקציה:
+```bash
+npm start
+```
+
+הממשק יפתח אוטומטית בדפדפן על http://localhost:3000
+
+## 🛠 דרך העבודה והכלים שבהם השתמשנו
+
+### טכנולוגיות Backend
+- **Node.js** - סביבת הפעלה לשרת
+- **Express.js** - פריימוורק לבניית RESTful API
+- **pg (node-postgres)** - דרייבר להתחברות ל-PostgreSQL
+- **CORS** - לאפשר קריאות מה-frontend
+- **dotenv** - לניהול משתני סביבה
+- **body-parser** - לעיבוד נתונים מה-client
+
+### טכנולוגיות Frontend
+- **React.js** - ספריית JavaScript לבניית ממשק משתמש
+- **React Router** - לניהול ניווט בין דפים
+- **Bootstrap & React-Bootstrap** - לעיצוב ו-UI components
+- **Axios** - לביצוע HTTP requests לסרבר
+- **FontAwesome** - לאיקונים
+
+### מבנה האפליקציה
+
+#### Backend Structure
+```
+backend/
+├── server.js (שרת ראשי)
+├── routes/
+│   ├── employees.js (ניהול עובדים)
+│   ├── departments.js (ניהול מחלקות)
+│   ├── evaluations.js (ניהול הערכות)
+│   ├── trainings.js (ניהול הכשרות)
+│   └── reports.js (דוחות וסטטיסטיקות)
+├── setup_functions.sql (פונקציות עזר)
+└── package.json
+```
+
+#### Frontend Structure
+```
+frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── App.js (רכיב ראשי)
+│   ├── index.js (נקודת כניסה)
+│   ├── index.css (עיצוב כללי)
+│   ├── components/
+│   │   └── Navigation.js (תפריט ניווט)
+│   └── pages/
+│       ├── Home.js (עמוד בית)
+│       ├── Employees.js (ניהול עובדים)
+│       ├── Departments.js (ניהול מחלקות)
+│       ├── Evaluations.js (ניהול הערכות)
+│       ├── Trainings.js (ניהול הכשרות)
+│       └── Reports.js (דוחות)
+└── package.json
+```
+
+### תכונות האפליקציה
+1. **ניהול עובדים** - הוספה, עדכון, מחיקה והצגת עובדים
+2. **ניהול מחלקות** - ניהול המחלקות הארגוניות
+3. **ניהול הערכות** - רישום והצגת הערכות ביצועים
+4. **ניהול הכשרות** - רישום השתתפות בהכשרות
+5. **דוחות וסטטיסטיקות** - הצגת נתונים מתקדמים ואנליטיקה
+
+## 📸 תמונות מסך של הפעלת האפליקציה
+
+### עמוד הבית
+![עמוד הבית של המערכת](שלב ה/screenshots/home_page.png)
+
+### ניהול עובדים
+![רשימת עובדים](שלב ה/screenshots/employees_list.png)
+![הוספת עובד חדש](שלב ה/screenshots/add_employee.png)
+
+### ניהול מחלקות
+![ניהול מחלקות](שלב ה/screenshots/departments.png)
+
+### מערכת הערכות
+![רשימת הערכות](שלב ה/screenshots/evaluations.png)
+![הוספת הערכה](שלב ה/screenshots/add_evaluation.png)
+
+### ניהול הכשרות
+![ניהול הכשרות](שלב ה/screenshots/trainings.png)
+
+### דוחות וסטטיסטיקות
+![דוח ביצועים](שלב ה/screenshots/reports.png)
+![גרפים וסטטיסטיקות](שלב ה/screenshots/statistics.png)
 
 ---
 
-## `main_program_1.sql`
+## ✨ תכונות מתקדמות
 
-**תיאור:**  
-מריצה את הפונקציה `GetUntrainedEmployees` ומבצעת העלאת שכר למצטיינים.
+- **Responsive Design** - האפליקציה מותאמת לכל המכשירים
+- **Real-time Updates** - עדכונים בזמן אמת ללא צורך ברענון דף
+- **Error Handling** - טיפול מתקדם בשגיאות והודעות למשתמש
+- **Data Validation** - ולידציה של נתונים בצד הלקוח והשרת
+- **REST API** - ממשק תכנות מובנה וסטנדרטי
 
 ---
 
-## main_program_2.sql
-
-**תיאור:**  
-מריצה את `GetEmployeeAvgScore` לעובד אחד, ומבצעת הפחתת שכר לעובדים בעלי ציונים נמוכים.
 
 
